@@ -1,59 +1,51 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
+import { useForm, SubmitHandler } from "react-hook-form";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import ErrorMessage from "./components/ErrorMessage";
+import myImage from "./assets/react.svg";
+
+const formSchema = z.object({
+  name: z.string().min(2, {
+    message: "Name must be at least 2",
+  }),
+  email: z.string().email({
+    message: "Invalid email",
+  }),
+});
 
 function App() {
-  const [count, setCount] = useState(0);
-  const [inputValue, setInputValue] = useState("");
-  const [errorMsg, setErrorMsg] = useState("");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+  });
 
-  const buttonRef = useRef<HTMLButtonElement>(null);
-
-  const handleCount = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.preventDefault();
-    if (errorMsg) return;
-    setCount(count + 1);
-  };
-
-  const handleCount2 = useCallback(() => {
-    setCount(count + 1);
-  }, [count]);
-
-  const handleOnChangeText = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-
-    //Min length 5
-    if (e.target.value.length < 5) {
-      setErrorMsg("error, min length is 5");
-    } else {
-      setErrorMsg("");
-    }
-  };
-
-  useEffect(() => {
-    console.log("useEffect");
-
-    return () => {
-      console.log("clean up");
-    };
-  }, [count]);
+  const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = (data) =>
+    console.log(data);
 
   return (
     <>
       <div>
-        <form action="">
-          <input value={inputValue} onChange={handleOnChangeText} type="text" />
-          {errorMsg && <span style={{ color: "red" }}>{errorMsg}</span>}
-          <button
-            disabled={errorMsg ? true : false}
-            ref={buttonRef}
-            onClick={(e) => handleCount(e)}
-          >
-            increment
-          </button>
+        <img src={myImage} alt="" />
+        <ErrorMessage message="This is an error message" />
+        <form onSubmit={handleSubmit(onSubmit)} action="">
+          <div className="space-x-2">
+            <input className="border" {...register("name")} type="text" />
+            {errors.name && (
+              <span style={{ color: "red" }}>{errors.name.message}</span>
+            )}
+
+            <input className="border" {...register("email")} type="text" />
+            {errors.email && (
+              <span style={{ color: "red" }}>{errors.email.message}</span>
+            )}
+
+            <button type="submit">Submit</button>
+          </div>
         </form>
-        {count}
       </div>
     </>
   );
