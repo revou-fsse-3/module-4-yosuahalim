@@ -1,35 +1,14 @@
 import "./App.css";
-import {
-  BrowserRouter as Router,
-  Route,
-  Link,
-  RouterProvider,
-  createBrowserRouter,
-} from "react-router-dom";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import FormPage from "./pages/FormPage";
 import AboutPage from "./pages/AboutPage";
+import HomePage from "./pages/HomePage";
 
 function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: (
-        <div>
-          <nav>
-            <ul>
-              <li>
-                <Link to="/">Home</Link>
-              </li>
-              <li>
-                <Link to="/form">Form</Link>
-              </li>
-              <li>
-                <Link to="/about">About</Link>
-              </li>
-            </ul>
-          </nav>
-        </div>
-      ),
+      element: <HomePage />,
     },
     {
       path: "/form",

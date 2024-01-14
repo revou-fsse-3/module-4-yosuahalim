@@ -1,15 +1,18 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
-
-type Props = {};
 
 type Pokemon = {
   base_experience: number;
   name: string;
 };
 
-const AboutPage = (props: Props) => {
-  const [user, setUser] = useState<any>();
+type User = {
+  name: string;
+  email: string;
+};
+
+const AboutPage = () => {
+  const [user, setUser] = useState<User>();
 
   const fetchData = async () => {
     const data = await axios.get(
@@ -24,8 +27,6 @@ const AboutPage = (props: Props) => {
     // const json = await data.json();
     setUser(data.data.data);
   };
-
-  console.log(user);
 
   const handleLogout = () => {
     localStorage.removeItem("token");

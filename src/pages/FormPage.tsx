@@ -4,8 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import ErrorMessage from "../components/ErrorMessage";
 import myImage from "../assets/react.svg";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -43,9 +42,16 @@ const FormPage = () => {
 
       localStorage.setItem("token", res.data.data.token);
       navigate("/about");
-    } catch (error: any) {
-      console.log(error);
-      alert(error.response.data.errors);
+    } catch (error: unknown | AxiosError) {
+      if (axios.isAxiosError(error)) {
+        // Access to config, request, and response
+        alert(error.response?.data);
+      } else {
+        // Just a stock error
+        if (error instanceof Error) {
+          alert(error.message);
+        }
+      }
     }
   };
 
