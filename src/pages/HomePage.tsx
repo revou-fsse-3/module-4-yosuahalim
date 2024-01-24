@@ -58,6 +58,7 @@ const HomePage = () => {
 
         <input
           type="text"
+          data-testid="search"
           placeholder="Enter Pokemon Name"
           className="border-2 border-black rounded-md p-2 mt-4"
           onChange={searchAction}
